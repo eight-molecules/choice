@@ -1,24 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import { children } from 'cheerio/dist/commonjs/api/traversing';
 
-function App() {
+const App = ({ children }) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='w-full h-full bg-gray-50 dark:bg-gray-950 text-gray-800 dark:text-gray-200'>
+    {children}
     </div>
   );
 }

@@ -6,7 +6,7 @@ export type ThreeColumnLayoutProps = PropsWithChildren & {
 
 export default function ThreeColumnLayout({ children, left, right }: ThreeColumnLayoutProps) {
 	return (
-		<div className="h-screen flex m-x-auto">
+		<div className="flex m-x-auto">
 			{isValidElement(left) && <>
 				<div className="container h-full max-w-min">
 					{left}

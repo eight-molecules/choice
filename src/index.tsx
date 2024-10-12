@@ -4,6 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { routes } from './routes';
+import App from './App';
 
 const router = createBrowserRouter(routes);
 
@@ -13,7 +14,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <App>
+      <RouterProvider router={router} fallbackElement={<div>err, error.</div>} />
+    </App>
   </React.StrictMode>
 );
 

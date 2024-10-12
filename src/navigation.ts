@@ -4,23 +4,28 @@ export default [
     path: "/dashboard",
   },
   {
-    name: "Settings",
-    path: "/settings",
-    children: [
-      {
-        name: "Profile",
-        path: "/settings/profile",
-      },
-      {
-        name: "Account",
-        path: "/settings/account",
-        children: [
-          {
-            name: "Privacy",
-            path: "/settings/account/privacy",
-          },
-        ],
-      },
-    ],
+    name: "Product",
+    path: "/product",
+    children: [],
+  },
+  {
+    name: "Orders",
+    path: "/orders",
+    children: [],
+  },
+  {
+    name: "Customers",
+    path: "/customers",
+    children: [],
+  },
+  {
+    name: "Vendors",
+    path: "/vendors",
+    children: [],
+  },
+  {
+    name: "Finance",
+    path: "/finance",
+    children: [],
   },
 ]

@@ -1,10 +1,20 @@
-import { children } from "cheerio/dist/commonjs/api/traversing";
-import { HTMLAttributes, isValidElement, Key, PropsWithChildren, ReactElement, ReactNode, useId } from "react"
+import { HTMLAttributes, PropsWithChildren, useId } from "react"
 import { Id } from "../../../types/Id";
 
-const TableHeader = ({ children }: PropsWithChildren & HTMLAttributes<HTMLTableSectionElement>) => (
-  <thead>{children}</thead>
-);
+function TableHead<T, U extends Id<T>>({ children, RowElement }: PropsWithChildren<{ 
+  data?: Array<U>
+  RowElement?: React.JSXElementConstructor<PropsWithChildren>
+}> & HTMLAttributes<HTMLTableSectionElement>) {
+  if (RowElement !== undefined) {
+    return <thead>
+      <RowElement />
+    </thead>
+  }
+
+  return <thead>
+    {children}
+  </thead>
+};
 
 const TableHeaderRow = ({ children }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
   return (
@@ -59,10 +69,10 @@ const Table = ({ children }: PropsWithChildren) => {
   )
 }
 
-TableHeader.Row = TableHeaderRow;
+TableHead.Row = TableHeaderRow;
 TableBody.Row = TableRow;
 
-Table.Header = TableHeader; 
+Table.Head = TableHead; 
 Table.Body = TableBody;
 
 // Convenience Mappings for export

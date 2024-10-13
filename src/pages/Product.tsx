@@ -3,7 +3,7 @@ import PageLayout from "../components/Layout/PageLayout";
 import ThreeColumnLayout from "../components/Layout/ThreeColumnLayout";
 import NavigationMenu from "../components/navigation/Menu/NavigationMenu";
 import navigation from "../navigation";
-import { json, Outlet, OutletProps } from "react-router-dom";
+import { json, Outlet } from "react-router-dom";
 
 const loader = () => json({ page: { title: 'Product' }});
 const Page = () => {

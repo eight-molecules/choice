@@ -1,4 +1,4 @@
-import { json, Link, Outlet, useLoaderData, useOutletContext, useParams } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 
 const CardHeader = ({ title }) => (

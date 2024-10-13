@@ -1,15 +1,16 @@
-import { PropsWithChildren } from "react";
-import { json, Link, useLoaderData } from "react-router-dom";
+import { PropsWithChildren, Suspense } from "react";
+import { Await, json, Link, useLoaderData } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import Table from "../../components/shared/Table/Table";
 import { ProductItem } from "../../types/ProductItem";
+import { parse } from "../../network/response";
 
 export const loader = async () => {
-  return json({
-    page: {
+  return {
+    page: Promise.resolve(json({
       title: 'List'
-    },
-    result: [
+    })).then(parse),
+    result: Promise.resolve(json([
       { id: 1, name: 'Item 1', price: { amount: "37.00", unit: "USD", symbol: "$" }, inventory: { amount: "43" } },
       { id: 2, name: 'Item 2', price: { amount: "37.00", unit: "USD", symbol: "$" }, inventory: { amount: "22" } },
       { id: 9, name: 'Item 9', price: { amount: "37.00", unit: "USD", symbol: "$" }, inventory: { amount: "0" } },
@@ -18,8 +19,11 @@ export const loader = async () => {
       { id: 7, name: 'Item 7', price: { amount: "37.00", unit: "USD", symbol: "$" }, inventory: { amount: "1" } },
       { id: 3, name: 'Item 3', price: { amount: "37.00", unit: "USD", symbol: "$" }, inventory: { amount: "31" } },
       { id: 6, name: 'Item 6', price: { amount: "37.00", unit: "USD", symbol: "$" }, inventory: { amount: "8" } },
-    ]
-  });
+    ] as ProductItem[])).then(parse),
+    ui: Promise.resolve(json({
+      title: 'Products'
+    })).then(parse)
+  };
 };
 
 const CardHeader = ({ title }) => (
@@ -58,15 +62,15 @@ const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{
     <CardHeader title={title} />
   </Card.Header>
   <Table>
-    <Table.Header className="drop-shadow-sm">
-      <Table.Header.Row>
+    <Table.Head className="drop-shadow-sm" RowElement={() =><Table.Head.Row>
         <Table.Cell width="1"><input type="checkbox" /></Table.Cell>
         <Table.Cell>Name</Table.Cell>
         <Table.Cell>Price</Table.Cell>
         <Table.Cell>Inventory</Table.Cell>
         <Table.Cell width="100%"></Table.Cell>
-      </Table.Header.Row>
-    </Table.Header>
+      </Table.Head.Row>}>
+      
+    </Table.Head>
     <Table.Body data={data} RowElement={ProductRow}>
     </Table.Body>
   </Table>
@@ -75,9 +79,13 @@ const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{
 
 const Page = () => {
   const data = useLoaderData() as { [_: string]: any };
-
   return (
-    <ProductListCard data={data?.['result']} title={data?.page.title} />
+    <Suspense>
+      <Await resolve={Promise.all([ data?.result, data?.ui ]) }>{([ result, ui ]) => {
+        return <ProductListCard data={result} title={ui.title} />
+      }}
+      </Await>
+    </Suspense>
   );
 }
 

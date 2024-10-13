@@ -1,4 +1,4 @@
-import { json, Link, Outlet, useLoaderData, useOutletContext, useParams } from "react-router-dom";
+import { json, Link, useOutletContext } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import { PropsWithChildren } from "react";
 import { ProductItem } from "../../types/ProductItem";

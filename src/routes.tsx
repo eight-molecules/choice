@@ -1,13 +1,11 @@
 import { json, redirect, RouteObject } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import InventoryDetail from "./pages/Product/ProductDetail";
-import InventoryList from "./pages/Product/ProductList";
 import PageLayout from "./components/Layout/PageLayout";
 import ProductList from "./pages/Product/ProductList";
 import ProductCreate from "./pages/Product/ProductCreate";
 import Product from "./pages/Product";
-import { children } from "cheerio/dist/commonjs/api/traversing";
 import ProductEdit from "./pages/Product/ProductEdit";
+import ProductDetail from "./pages/Product/ProductDetail";
 
 export const routes: RouteObject[] = [
   {
@@ -38,8 +36,8 @@ export const routes: RouteObject[] = [
       },
       { 
         path: 'detail/:id',
-        element: <InventoryDetail.Page />,
-        loader: InventoryDetail.loader,
+        element: <ProductDetail.Page />,
+        loader: ProductDetail.loader,
         children: [
           {
             path: 'edit',

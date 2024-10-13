@@ -9,7 +9,9 @@ import App from './App';
 const router = createBrowserRouter(routes);
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root') as HTMLElement, {
+    onRecoverableError: () => { }
+  }
 );
 
 root.render(

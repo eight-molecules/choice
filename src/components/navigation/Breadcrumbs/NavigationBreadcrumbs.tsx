@@ -1,25 +1,35 @@
-import { NavLink, useMatches, useRouteLoaderData } from 'react-router-dom';
+import { Await, NavLink, useMatches, useRouteLoaderData } from 'react-router-dom';
+import { parse } from '../../../network/response';
+import { Suspense } from 'react';
 
 const NavigationBreadcrumb = ({ route }) => {
   const data = useRouteLoaderData(route.id);
 
-  return (data?.['page'] &&
+  return (
+    <Suspense fallback={<></>}>
+    <Await resolve={data?.['page']}>{(data) => {
+    return (
     <li aria-current="page" key={`nav-breadcrumb-${route.id}`} className="flex items-center">
       <div className="flex items-center">
         <NavLink to={route.pathname}>
           <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
-            {data?.['page']?.['title']}
+            {data?.title}
           </span>
         </NavLink>
       </div>
-    </li>);
+    </li>
+    )
+    }}
+    </Await>
+    </Suspense>
+  );
 };
 
 const NavigationBreadcrumbs = () => {
   const matches = useMatches();
   const crumbs = matches.map(route => [
     <NavigationBreadcrumb route={route} />, 
-    <li>{'→'}</li>
+    <li key={`nav-breadcrumb-${route.id}-spacer`}>{'→'}</li>
   ]).flat().slice(0, (matches.length * 2) - 1);
 
   return (

@@ -3,7 +3,8 @@ import IDBStorage from 'idbstorage';
 import { ProductItem } from "../types/ProductItem";
 import { parse } from "../network/response";
 
-const storage = new IDBStorage({ name: 'product' });
+const storage = new IDBStorage({ name: 'choice', _storeName: 'product' });
+
 
 export const store = (() => {
   storage.getItem(`Ids`).then((ids) => {

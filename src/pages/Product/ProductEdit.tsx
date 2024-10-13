@@ -3,29 +3,15 @@ import Modal from '../../components/Modal';
 import { store as productStore } from '../../storage/product';
 import { FormEvent, PropsWithChildren, ReactNode, Suspense, useEffect, useState } from "react";
 import ProductForm, { ProductFormCardProps } from "./ProductForm";
+import { parse } from "../../network/response";
 
 export const loader = async ({ params }) => {
   return {
-    page: json({ title: 'Edit' }),
+    page: Promise.resolve(json({ title: 'Edit' }))
+      .then(parse),
     result: productStore.get(params.id)
   }
 }
-
-const CardHeader = ({ title }) => (
-  <div className="flex">
-    <div className="flex-grow">
-      {title}
-    </div>
-    <div>
-      <Link to="..">
-        <button>
-          Close
-        </button>
-      </Link>
-    </div>
-  </div>
-);
-
 const edit = async (e: FormEvent<HTMLFormElement>) => {
   e.stopPropagation();
   e.preventDefault();

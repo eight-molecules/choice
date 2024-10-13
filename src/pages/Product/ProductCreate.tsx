@@ -6,9 +6,10 @@ import { store as productStore } from '../../storage/product';
 import ProductForm from "./ProductForm";
 import { randomUUID } from "crypto";
 import Modal from "../../components/Modal";
+import { parse } from "../../network/response";
 
 export const loader = async () => ({
-  page: json({ title: 'Create' })
+  page: Promise.resolve(json({ title: 'Create' })).then(parse)
 });
 
 export const ProductCreateCardHeader = ({ title, end }) => (

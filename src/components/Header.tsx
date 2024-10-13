@@ -4,7 +4,7 @@ import NavigationBreadcrumbs from "./navigation/Breadcrumbs/NavigationBreadcrumb
 
 const Header = () => {
   return (
-    <header className="sticky top-0 bg-gray-100, dark:bg-gray-800 shadow-md z-10 p-4">
+    <header className="sticky top-0 bg-gray-50 dark:bg-gray-800 shadow-md z-10 p-4">
       <ThreeColumnLayout left={<Link to="/"><h1 className="px-6">App!</h1></Link>}>
         <NavigationBreadcrumbs />
       </ThreeColumnLayout>

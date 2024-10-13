@@ -60,7 +60,7 @@ export const ProductFormCard = ({
           <input name="description" defaultValue={product?.description} placeholder="Description" type="string" />
         </div>
     </div>
-    <div className="flex align-end">
+    <div className="flex justify-end p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
       {submitBtn}
     </div>
     </Form>

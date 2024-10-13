@@ -4,6 +4,8 @@ import { FormEvent, PropsWithChildren, ReactNode, useEffect, useState } from "re
 import { ProductItem } from "../../types/ProductItem";
 import { store as productStore } from '../../storage/product';
 import ProductForm from "./ProductForm";
+import { randomUUID } from "crypto";
+import Modal from "../../components/Modal";
 
 export const loader = async () => ({
   page: json({ title: 'Create' })
@@ -37,35 +39,37 @@ export const create = async (e: React.FormEvent<HTMLFormElement>) => {
     id, name, description, inventory: { amount }, price: { amount: '37.00', unit: 'USD', symbol: '$' }
   });
 
-  console.log(id)
+  console.log(id);
 
   return id;
 };
 
 
 export const ProductCreateModal = () => {
+  const navigate = useNavigate();
   const data = useLoaderData();
   const { state } = useLocation();
 
   return (
-    <div id="modal-edit-product" className="absolute top-0 bottom-0 left-0 right-0 flex">
-      <div className="w-full h-full relative">
-        <div className="mx-auto">
-          <div className="p-20">
-            <ProductForm.Card product={{ ...state }} onSubmit={create} headerEnd={<Link to="..">
-              <button>
-                Close
-              </button>
-            </Link>} />
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal id="product-create-modal">
+      <ProductForm.Card title="Create" product={{ id: crypto.randomUUID(), ...state }} onSubmit={(e) => create(e).then((id) => navigate(`../${id}`))}
+        headerEnd={<Link to="..">
+          <button>
+            Close
+          </button>
+        </Link>} />
+    </Modal>
   );
 }
 
 export const ProductCreatePage = () => {
-  return <ProductForm.Card onSubmit={create} headerEnd={<Link to=".." />} />
+  const navigate = useNavigate();
+
+  return <ProductForm.Card title="Create" product={{ id: crypto.randomUUID() }} onSubmit={(e) => create(e).then((id) => navigate(`../${id}`))} headerEnd={<Link to="..">
+    <button>
+      Close
+    </button>
+  </Link>} />
 }
 
 export default {

@@ -68,7 +68,6 @@ const ProductEditModal = () => {
 
   return (
     <Modal id="modal-edit-product">
-      <div className="size-4/5 overflow-scroll mx-auto">
       <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'><button>Close</button></Link>} loading={loading}/>} >
       <Await resolve={data.result}>
         {(product) =>
@@ -82,7 +81,6 @@ const ProductEditModal = () => {
           }}/>}
       </Await>
       </Suspense>
-      </div>
     </Modal>
   );
 }

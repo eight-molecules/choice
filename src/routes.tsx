@@ -17,24 +17,24 @@ export const routes: RouteObject[] = [
     loader: Dashboard.loader,
   }, {
     path: 'product',
-    element: <PageLayout><Product.Page /></PageLayout>,
+    element: <Product.Page />,
     loader: Product.loader,
     children: [
       {
         path: "",
         element: <ProductList.Page />,
-        loader: ProductList.loader
-      },
-      {
-        path: "create",
-        element: <ProductCreate.Page />,
-        loader: ProductCreate.loader
+        loader: ProductList.loader,
+        children: [{
+          path: "create",
+          element: <ProductCreate.Modal />,
+          loader: ProductCreate.loader
+        }]
       },
       {
         path: ':id',
         loader: async ({ params }) => redirect(`../detail/${params.id}`),
       },
-      { 
+      {
         path: 'detail/:id',
         element: <ProductDetail.Page />,
         loader: ProductDetail.loader,

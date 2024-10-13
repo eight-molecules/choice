@@ -13,7 +13,7 @@ export default function ThreeColumnLayout({ children, left, right }: ThreeColumn
 				</div>
 			</>}
 
-			<div className="container grow">
+			<div className="container grow overflow-auto">
 				{children}
 			</div>
 

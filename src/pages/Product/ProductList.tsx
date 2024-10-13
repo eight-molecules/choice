@@ -1,5 +1,5 @@
-import { PropsWithChildren, Suspense, useEffect, useState } from "react";
-import { Await, json, Link, useLoaderData } from "react-router-dom";
+import { FormEvent, FormEventHandler, PropsWithChildren, Suspense, useEffect, useState } from "react";
+import { Await, json, Link, Outlet, useLoaderData } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import Table from "../../components/shared/Table/Table";
 import { ProductItem } from "../../types/ProductItem";
@@ -34,10 +34,10 @@ const CardHeader = ({ title }) => (
   </div>
 );
 
-const ProductRow = ({ datum }: PropsWithChildren<{ datum: ProductItem }>) => {
+const ProductRow = ({ datum, onChange, selected }: PropsWithChildren<{ datum: ProductItem, onChange?: FormEventHandler<HTMLInputElement>, selected: boolean}>) => {
   return (
     <Table.Row key={`inventory-list-row-${datum.id}`}>
-      <Table.Cell width="1"><input type="checkbox" /></Table.Cell>
+      <Table.Cell width="1"><input type="checkbox" name={`${datum.id}`} onChange={onChange} checked={selected}/></Table.Cell>
       <Table.Cell><Link to={`/product/detail/${datum.id}`} state={datum}>{datum?.name}</Link></Table.Cell>
       <Table.Cell>{datum.price?.symbol ?? datum.price?.unit}{datum.price?.amount}</Table.Cell>
       <Table.Cell>{datum.inventory?.amount}</Table.Cell>
@@ -50,6 +50,19 @@ const ProductRow = ({ datum }: PropsWithChildren<{ datum: ProductItem }>) => {
 const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{ 
   className?: string,
   data?: ProductItem[], title: string}>) => {
+    const [selection, setSelection] = useState({ ...data?.reduce((acc, cur) => ({ ...acc, [cur.id]: false }), { }) } as { [_: string]: boolean })
+    const [selectedCount, setSelectedCount] = useState(0);
+
+    useEffect(() => {
+      setSelectedCount(Object.values(selection).reduce((acc, cur) => cur ? acc + 1 : acc, 0));
+    }, [selection]);
+
+
+    const onChange: FormEventHandler<HTMLInputElement> = (e: FormEvent<HTMLInputElement>) => {
+      const input = e.target as HTMLInputElement;
+      setSelection({ ...selection, [input.name]: (input.checked)})
+    }
+
     return (
 <Card>
   <Card.Header>
@@ -57,7 +70,9 @@ const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{
   </Card.Header>
   <Table>
     <Table.Head className="drop-shadow-sm" RowElement={() =><Table.Head.Row>
-        <Table.Cell width="1"><input type="checkbox" /></Table.Cell>
+        <Table.Cell width="1"><input type="checkbox" name="select-all" onChange={(e) => {
+          setSelection(Object.keys(selection).reduce((acc, cur) => ({ ...acc, [cur]: e.target.checked }), { }))
+        }} checked={selectedCount === data?.length} /></Table.Cell>
         <Table.Cell>Name</Table.Cell>
         <Table.Cell>Price</Table.Cell>
         <Table.Cell>Inventory</Table.Cell>
@@ -66,7 +81,7 @@ const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{
       </Table.Head.Row>}>
       
     </Table.Head>
-    <Table.Body data={data} RowElement={ProductRow} />
+    <Table.Body data={data} RowElement={(({ ...props }) => <ProductRow {...props} onChange={onChange} selected={selection[props.datum.id]} />)} />
   </Table>
 </Card>
 )};
@@ -75,6 +90,7 @@ const Page = () => {
   const data = useLoaderData() as { [_: string]: any };
 
   return (
+    <div className="min-w-96">
     <Suspense fallback={<Card>
       <Card.Header>{data?.['page']?.['title'] ?? 'Loading'}</Card.Header>
       <div className="w-60 mx-auto p-3">
@@ -94,6 +110,8 @@ const Page = () => {
           return <ProductListCard data={result} title={ui?.title ?? 'Products'}></ProductListCard>} }
       </Await>
     </Suspense>
+    <Outlet />
+    </div>
   );
 }
 

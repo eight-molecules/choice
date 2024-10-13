@@ -10,9 +10,8 @@ import ProductList from "./Product/ProductList";
 import { parse } from "../network/response";
 
 export const loader = async () => ({
-  page: Promise.resolve(json({ title: 'Dashboard' })).then(parse),
-  product: ProductList.loader()
-    .then(({ result }) => result)
+  page: parse(Promise.resolve(json({ title: 'Dashboard' }))),
+  product: ProductList.loader().then(({ result }) => result)
 });
 
 const Page = () => {

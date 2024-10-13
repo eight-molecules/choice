@@ -1,5 +1,15 @@
-import { Link, useOutletContext } from "react-router-dom";
-import Card from "../../components/shared/Card/Card";
+import { Await, json, Link, useLocation, useNavigate, useOutletContext, useRevalidator } from "react-router-dom";
+import Modal from '../../components/Modal';
+import { store as productStore } from '../../storage/product';
+import { FormEvent, PropsWithChildren, ReactNode, Suspense, useEffect, useState } from "react";
+import ProductForm, { ProductFormCardProps } from "./ProductForm";
+
+export const loader = async ({ params }) => {
+  return {
+    page: json({ title: 'Edit' }),
+    result: productStore.get(params.id)
+  }
+}
 
 const CardHeader = ({ title }) => (
   <div className="flex">
@@ -16,39 +26,67 @@ const CardHeader = ({ title }) => (
   </div>
 );
 
-const Modal = () => {
-  const data = useOutletContext() as { [_: string]: any };
+const edit = async (e: FormEvent<HTMLFormElement>) => {
+  e.stopPropagation();
+  e.preventDefault();
+
+  // This is a weird case where the form event is array-ish 
+  // by containing the inputs in numbered keys, but Typescript
+  // doesn't quite match the reality of that object shape.
+  const { id, name, description, amount, } = Array.from(e.target as unknown as Array<any>).reduce((product, input, index) => {
+    return {
+      ...product,
+      [input.name]: input.value
+    }
+  }, {});
+
+  if (!id || !(await productStore.get(id))) {
+    throw new Error('Cannot edit a product that does not exist.');
+  };
+
+  await productStore.set(id, {
+    id, name, description, inventory: { amount }, price: { amount: '37.00', unit: 'USD', symbol: '$' }
+  });
+
+  return id;
+};
+
+const ProductEditCard = ({ product, headerEnd, onSubmit, loading = false }: PropsWithChildren<ProductFormCardProps>) => {
+  return (
+  <ProductForm.Card product={product} title={`Edit ${product?.name}`} headerEnd={headerEnd} onSubmit={onSubmit} loading={loading}/>
+)};
+
+const ProductEditModal = () => {
+  const navigate = useNavigate();
+  const { data, refresh } = useOutletContext() as { [_: string]: any };
+  const { state } = useLocation();
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    data.result.then(() => setLoading(false))
+  }, [])
 
   return (
-    <div id="modal-edit-product" className="absolute top-0 bottom-0 left-0 right-0 flex">
-      <div className="w-full h-full relative">
-        <div className="mx-auto">
-          <div className="p-20">
-            <Card>
-              <Card.Header><CardHeader title={data?.result.name} /></Card.Header>
-              <div className="p-3 flex flex-wrap">
-                <div className="grow p-3 min-w-80 w-full">
-                  <label>Name: </label>
-                  <span>{data.result.name}</span>
-                </div>
-                <div className="grow p-3 min-w-80 w-full">
-                  <label>Inventory: </label>
-                  <span>{data.result.inventory.amount}</span>
-                </div>
-                <div className="grow p-3 min-w-80 w-full">
-                  <label>Description: </label>
-                  <span>{data.result.description}</span>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </div>
-      </div>
-    </div>
+    <Modal id="modal-edit-product">
+      <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'><button>Close</button></Link>} loading={loading}/>} >
+      <Await resolve={data.result}>
+        {(product) =>
+          <ProductEditCard product={product} headerEnd={<Link to='..'><button>Close</button></Link>} onSubmit={(e) => {
+            setLoading(true);
+            edit(e)
+            .then((id) => refresh?.(id))
+            .then(() => navigate(`..`))
+            .catch((err) => console.error(err))
+            .finally(() => setLoading(false));
+          }}/>}
+      </Await>
+      </Suspense>
+    </Modal>
   );
 }
 
 export default {
-  Modal,
-  // loader
+  Modal: ProductEditModal,
+  Card: ProductEditCard,
+  loader
 };

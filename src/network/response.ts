@@ -1,15 +1,10 @@
-const cache: { [ _: symbol]: any } = { }
-export const parse = async (r: Response) => {
-  console.log(r)
-  if (r.body && r.body.locked === false && r.bodyUsed === false) {
-    const body = await r.json();
-    console.log(body);
-    if (typeof r.url === 'string' && r.url.length > 0) {
-      cache[r.url] = body;
-    }
-
-    return cache[r.url] || body;
-  }
+export const parse = async <T>(result: Promise<Response> | Response) => {
+  const r = (await result) as Response;
   
-  throw Error(`Failed to parse request for url: ${r.url}`)
+  if (r.body && r.body.locked === false && r.bodyUsed === false) {
+    const result = await r.json();
+    return result as T;
+  } else if ((r.body instanceof ReadableStream) === false) {
+    return await r.text();
+  }
 };

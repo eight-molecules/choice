@@ -42,7 +42,7 @@ export const routes: RouteObject[] = [
           {
             path: 'edit',
             element: <ProductEdit.Modal />,
-            loader: async () => json({ page: { title: 'Edit' } })
+            loader: ProductEdit.loader
           }
         ]
       }

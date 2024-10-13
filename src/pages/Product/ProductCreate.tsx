@@ -1,57 +1,62 @@
-import { json, Link, useOutletContext } from "react-router-dom";
+import { json, Link, useLoaderData, useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
-import { PropsWithChildren } from "react";
+import { FormEvent, PropsWithChildren, ReactNode, useEffect, useState } from "react";
 import { ProductItem } from "../../types/ProductItem";
+import { store as productStore } from '../../storage/product';
+import ProductForm from "./ProductForm";
 
-const loader = () => json({ page: { title: 'Create' }});
+export const loader = async () => ({
+  page: json({ title: 'Create' })
+});
 
-const CardHeader = ({ title }) => (
+export const ProductCreateCardHeader = ({ title, end }) => (
   <div className="flex">
     <div className="flex-grow">
       {title}
     </div>
     <div>
-      <Link to="..">
-        <button>
-          Close
-        </button>
-      </Link>
+      {end}
     </div>
   </div>
 );
 
-const ProductCreateCard = ({ product }: PropsWithChildren<{ product?: ProductItem }>) => {
-  return (
-  <Card>
-    <Card.Header><CardHeader title="Create" /></Card.Header>
-    <div className="p-3 flex flex-wrap">
-      <div className="grow p-3 min-w-80 w-full">
-        <label>Name: </label>
-        <input value={product?.name} placeholder={"Product Name"} />
-      </div>
-      <div className="grow p-3 min-w-80 w-full">
-        <label htmlFor="inventory-input">Inventory: </label>
-        <input name="inventory-input" value={product?.name} placeholder={"Product Name"} />
-        <span>{product?.inventory.amount}</span>
-      </div>
-      <div className="grow p-3 min-w-80 w-full">
-        <label>Description: </label>
-        <span>{product?.description}</span>
-      </div>
-    </div>
-  </Card>
-  );
+export const create = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.stopPropagation();
+  e.preventDefault();
+  // This is a weird case where the form event is array-ish 
+  // by containing the inputs in numbered keys, but Typescript
+  // doesn't quite match the reality of that object shape.
+  const { id, name, description, amount, } = Array.from(e.target as unknown as Array<any>).reduce((product, input, index) => {
+    return {
+      ...product,
+      [input.name]: input.value
+    }
+  }, {});
+
+  await productStore.set(id, {
+    id, name, description, inventory: { amount }, price: { amount: '37.00', unit: 'USD', symbol: '$' }
+  });
+
+  console.log(id)
+
+  return id;
 };
-  
-const Modal = () => {
-  const data = useOutletContext() as { [_: string]: any };
+
+
+export const ProductCreateModal = () => {
+  const data = useLoaderData();
+  const { state } = useLocation();
 
   return (
     <div id="modal-edit-product" className="absolute top-0 bottom-0 left-0 right-0 flex">
       <div className="w-full h-full relative">
         <div className="mx-auto">
           <div className="p-20">
-            <ProductCreateCard />
+            <ProductForm.Card product={{ ...state }} onSubmit={create} headerEnd={<Link to="..">
+              <button>
+                Close
+              </button>
+            </Link>} />
           </div>
         </div>
       </div>
@@ -59,12 +64,12 @@ const Modal = () => {
   );
 }
 
-const Page = () => {
-  return <ProductCreateCard />
+export const ProductCreatePage = () => {
+  return <ProductForm.Card onSubmit={create} headerEnd={<Link to=".." />} />
 }
 
 export default {
-  Modal,
-  Page,
+  Modal: ProductCreateModal,
+  Page: ProductCreatePage,
   loader
 };

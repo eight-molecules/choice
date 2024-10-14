@@ -48,7 +48,7 @@ const ProductListCard = ({ data, title,  }: PropsWithChildren<{
     }
 
     return (
-<Card>
+<Card className="min-h-16">
   <Card.Header>
     <div className="flex">
       <div className="flex-grow">
@@ -92,15 +92,29 @@ const Page = () => {
     <div className="min-w-96">
     <Suspense fallback={<Card>
       <Card.Header>{data?.['page']?.['title'] ?? 'Loading'}</Card.Header>
-      <div className="w-60 mx-auto p-3">
-        Loading data.
+      <div className="w-60 mx-auto p-3 min-h-16">
+        <Table>
+          <Table.Head>
+            <Table.Row>
+              <Table.Cell width="100%">
+              </Table.Cell>
+              </Table.Row>
+          </Table.Head>
+          <Table.Body>
+            <Table.Body>
+              <Table.Row>
+                <Table.Cell width="100%"></Table.Cell>
+              </Table.Row>
+            </Table.Body>
+          </Table.Body>
+        </Table>
       </div>
     </Card>}>
       <Await
         resolve={Promise.all([data.result, data.ui])}
         errorElement={<Card>
           <Card.Header>Error</Card.Header>
-          <div className="w-60 mx-auto p-3">
+          <div className="w-60 mx-auto p-3 min-h-16">
             Failed to load Product List data.
           </div>
         </Card>}

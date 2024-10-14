@@ -35,9 +35,10 @@ export const routes: RouteObject[] = [
         element: <ProductList.Page />,
         loader: ProductList.loader,
         children: [{
-          path: "create",
+          path: "create/:_",
           element: <ProductCreate.Modal />,
-          loader: ProductCreate.loader
+          loader: ProductCreate.loader,
+          
         }, {
           path: "delete",
           element: <ProductDelete.Modal />,

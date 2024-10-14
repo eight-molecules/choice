@@ -51,7 +51,7 @@ export const ProductCreateModal = () => {
 
   return (
     <Modal.Element id="product-create-modal">
-      <div className="min-w-96 size-4/5 overflow-auto mx-auto">
+      <div className="min-w-96 size-2/5 overflow-auto mx-auto">
         <ProductForm.Card title="Create" product={{ id: crypto.randomUUID(), ...state }} onSubmit={(e) => create(e).then((id) => navigate(`../${id}`))}
           headerEnd={<Link to="..">
             Close

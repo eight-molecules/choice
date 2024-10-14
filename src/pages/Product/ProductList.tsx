@@ -2,7 +2,7 @@ import { FormEvent, FormEventHandler, PropsWithChildren, Suspense, useEffect, us
 import { Await, json, Link, Outlet, useLoaderData } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import Table from "../../components/shared/Table/Table";
-import { ProductItem } from "../../types/ProductItem";
+import { Product } from "../../types/Product";
 import { parse } from "../../network/response";
 import { store as productStorage } from '../../storage/product';
 
@@ -19,22 +19,7 @@ export const loader = async () => {
   };
 };
 
-const CardHeader = ({ title }) => (
-  <div className="flex">
-    <div className="flex-grow">
-      {title}
-    </div>
-    <div>
-      <Link to="./create">
-        <button>
-          Create
-        </button>
-      </Link>
-    </div>
-  </div>
-);
-
-const ProductRow = ({ datum, onChange, selected }: PropsWithChildren<{ datum: ProductItem, onChange?: FormEventHandler<HTMLInputElement>, selected: boolean}>) => {
+const ProductRow = ({ datum, onChange, selected }: PropsWithChildren<{ datum: Product, onChange?: FormEventHandler<HTMLInputElement>, selected: boolean}>) => {
   return (
     <Table.Row key={`inventory-list-row-${datum.id}`}>
       <Table.Cell width="1"><input type="checkbox" name={`${datum.id}`} onChange={onChange} checked={selected}/></Table.Cell>
@@ -47,9 +32,8 @@ const ProductRow = ({ datum, onChange, selected }: PropsWithChildren<{ datum: Pr
   );
 }
 
-const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{ 
-  className?: string,
-  data?: ProductItem[], title: string}>) => {
+const ProductListCard = ({ data, title,  }: PropsWithChildren<{ 
+  data?: Product[], title: string}>) => {
     const [selection, setSelection] = useState({ ...data?.reduce((acc, cur) => ({ ...acc, [cur.id]: false }), { }) } as { [_: string]: boolean })
     const [selectedCount, setSelectedCount] = useState(0);
 
@@ -66,7 +50,19 @@ const ProductListCard = ({ className, data, title,  }: PropsWithChildren<{
     return (
 <Card>
   <Card.Header>
-    <CardHeader title={title} />
+    <div className="flex">
+      <div className="flex-grow">
+        {title}
+      </div>
+      <div>
+        <Link to="./delete" state={Object.entries(selection).map(([k, v]) => v && data?.find((product) => product.id === k))}>
+          Delete
+        </Link>
+        <Link to="./create">
+            Create
+        </Link>
+      </div>
+    </div>
   </Card.Header>
   <Table>
     <Table.Head className="drop-shadow-sm" RowElement={() =><Table.Head.Row>

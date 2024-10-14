@@ -1,7 +1,7 @@
 import { Form, useNavigate } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import { FormEvent, PropsWithChildren, ReactNode } from "react";
-import { ProductItem } from "../../types/ProductItem";
+import { Product } from "../../types/Product";
 
 
 export const ProductFormCardHeader = ({ title, end }) => (
@@ -20,7 +20,7 @@ export interface ProductFormCardProps {
   headerEnd: ReactNode,
   submitBtn?: ReactNode, 
   onSubmit?: (e: FormEvent<HTMLFormElement>) => void, 
-  product?: Partial<ProductItem>, 
+  product?: Partial<Product>, 
   title?: string 
 }; 
 

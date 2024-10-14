@@ -54,10 +54,10 @@ const ProductEditModal = () => {
 
   return (
     <Modal id="modal-edit-product">
-      <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'><button>Close</button></Link>} loading={loading}/>} >
+      <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'>Close</Link>} loading={loading}/>} >
       <Await resolve={data.result}>
         {(product) =>
-          <ProductEditCard product={product} headerEnd={<Link to='..'><button>Close</button></Link>} onSubmit={(e) => {
+          <ProductEditCard product={product} headerEnd={<Link to='..'>Close</Link>} onSubmit={(e) => {
             setLoading(true);
             edit(e)
             .then((id) => refresh?.(id))

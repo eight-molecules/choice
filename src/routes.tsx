@@ -6,6 +6,7 @@ import ProductCreate from "./pages/Product/ProductCreate";
 import Product from "./pages/Product";
 import ProductEdit from "./pages/Product/ProductEdit";
 import ProductDetail from "./pages/Product/ProductDetail";
+import ProductDelete from "./pages/Product/ProductDelete";
 
 export const routes: RouteObject[] = [
   {
@@ -28,6 +29,9 @@ export const routes: RouteObject[] = [
           path: "create",
           element: <ProductCreate.Modal />,
           loader: ProductCreate.loader
+        }, {
+          path: "delete",
+          element: <ProductDelete.Modal />,
         }]
       },
       {

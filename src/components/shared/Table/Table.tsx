@@ -1,4 +1,4 @@
-import { HTMLAttributes, PropsWithChildren, useId } from "react"
+import { HTMLAttributes, PropsWithChildren, TdHTMLAttributes, useId } from "react"
 import { Id } from "../../../types/Id";
 
 function TableHead<T, U extends Id<T>>({ children, RowElement }: PropsWithChildren<{ 
@@ -6,7 +6,7 @@ function TableHead<T, U extends Id<T>>({ children, RowElement }: PropsWithChildr
   RowElement?: React.JSXElementConstructor<PropsWithChildren>
 }> & HTMLAttributes<HTMLTableSectionElement>) {
   if (RowElement !== undefined) {
-    return <thead>
+    return <thead className="sticky">
       <RowElement />
     </thead>
   }
@@ -16,9 +16,9 @@ function TableHead<T, U extends Id<T>>({ children, RowElement }: PropsWithChildr
   </thead>
 };
 
-const TableHeaderRow = ({ children }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
+const TableHeaderRow = ({ children, className }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
   return (
-    <tr className="bg-gray-50 dark:bg-gray-900" children={children} />
+    <tr className={`bg-gray-50 dark:bg-gray-900 ${className}`} children={children} />
   )
 }
 
@@ -44,25 +44,25 @@ function TableBody<T, U extends Id<T>>({ children, data, RowElement }: PropsWith
 };
 
 
-const TableRow = ({ children, className }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
-  return <tr className="bg-gray-100 even:bg-gray-200 dark:bg-gray-950 even:dark:bg-gray-900">
+const TableRow = ({ children, className = '' }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
+  return <tr className={`bg-gray-100 even:bg-gray-200 dark:bg-gray-950 even:dark:bg-gray-900 ${className}`}>
     {children}
   </tr>
 }
 
-const TableCell = ({ children, className, width = '', wrap = false }: PropsWithChildren<{ width?: string | number, wrap?: boolean }> & HTMLAttributes<HTMLTableElement>) => {
+const TableCell = ({ children, className = '', width = '', wrap = false, colSpan }: PropsWithChildren<{ width?: string | number, wrap?: boolean }> & TdHTMLAttributes<HTMLTableCellElement>) => {
 
   return (
-    <td width={`${width}`} className={`${wrap ? '' : 'text-nowrap'} px-3 py-2 ${className}`}>
+    <td colSpan={colSpan} width={`${width}`} className={`${wrap ? '' : 'text-nowrap'} px-3 py-2 ${className}`}>
       {children}
     </td>
   )
 }
 
-const Table = ({ children }: PropsWithChildren) => {
+const Table = ({ children, className = '' }: PropsWithChildren<{ className?: string }>) => {
   return (
     <div className="overflow-x-auto">
-      <table className="table-fixed">
+      <table className={`table-fixed ${className}`}>
         {children}
       </table>
     </div>

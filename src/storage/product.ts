@@ -1,10 +1,9 @@
 import { json } from "react-router-dom";
 import IDBStorage from 'idbstorage';
-import { ProductItem } from "../types/ProductItem";
+import { Product } from "../types/Product";
 import { parse } from "../network/response";
 
 const storage = new IDBStorage({ name: 'choice', _storeName: 'product' });
-
 
 export const store = (() => {
   storage.getItem(`Ids`).then((ids) => {
@@ -15,12 +14,12 @@ export const store = (() => {
 
   return {
   get: async (k: string) => {
-    const product = await parse(json(await storage.getItem(k))) as ProductItem
+    const product = await parse(json(await storage.getItem(k))) as Product
 
     return { ...product }
   },
   ids: async () => json([ ...await storage.getItem(`Ids`) ]),
-  set: async (k, v: ProductItem) => {
+  set: async (k, v: Product) => {
     if (!await storage.getItem(k)) {
       const list = [] = await storage.getItem(`Ids`)
       storage.setItem(`Ids`, [ ...list, k ])

@@ -41,17 +41,13 @@ const NavigationBreadcrumb = ({ route }) => {
         )
       }}
       </Await>
-      <li key={`nav-breadcrumb-${route.id}}-spacer`}>{'→'}</li>
+      <li key={`nav-breadcrumb-${route.id}}-spacer`} className='last:hidden'>{'→'}</li>
     </Suspense>);
 };
 
 const NavigationBreadcrumbs = () => {
   const matches = useMatches();
   const crumbs = matches.map(route => <NavigationBreadcrumb route={route} />)
-    .filter((el) => el.type !== <Fragment />)
-    .map((el) => [el, ])
-    .flat()
-    .slice(0, (matches.length * 2) - 1);
 
   return (
     <nav className="flex" aria-label="Breadcrumb">

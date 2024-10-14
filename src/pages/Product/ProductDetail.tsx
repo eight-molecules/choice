@@ -8,7 +8,6 @@ import { Id } from "../../types/Id";
 import Overflowable from "../../components/Overflowable";
 
 export const loader = async ({ params }) => {
-  console.log('params', params);
   return {
     page: Promise.resolve(json({
       title: 'Item 1',
@@ -16,14 +15,6 @@ export const loader = async ({ params }) => {
     result: productStore.get(params.id)
   }
 }
-
-const CardHeader = ({ title }) => (
-  <div className="flex">
-    <div className="flex-grow">
-      {title}
-    </div>
-  </div>
-);
 
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const Page = () => {

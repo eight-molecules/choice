@@ -1,6 +1,6 @@
 
 import { Fragment } from "react";
-import { NavigateFunction, NavLink, useNavigate } from "react-router-dom";
+import { NavigateFunction, NavLink, useMatches, useNavigate } from "react-router-dom";
 
 export interface NavigationItem {
   name: string;
@@ -41,6 +41,10 @@ const NavigationMenuItem = ({ item }) => {
 
 
 export default function NavigationMenu({ items }: NavigationMenuProps) {
+
+  const matches = useMatches();
+  console.log(matches)
+  
   return (
     <div className="w-64 h-screen bg-gray-100 dark:bg-gray-900 shadow-inner">
       <nav className="flex flex-col p-4">

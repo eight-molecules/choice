@@ -54,7 +54,7 @@ const ProductListCard = ({ data, title,  }: PropsWithChildren<{
       <div className="flex-grow">
         {title}
       </div>
-      <div>
+      <div className="space-x-3">
         <Link to="./delete" state={Object.entries(selection).map(([k, v]) => v && data?.find((product) => product.id === k))}>
           Delete
         </Link>

@@ -8,7 +8,6 @@ const NavigationBreadcrumb = ({ route }) => {
   return (
     <Suspense fallback={<></>}>
     <Await resolve={data?.['page']}>{(data) => {
-      console.log(data)
     return (
     <li aria-current="page" key={`nav-breadcrumb-${route.id}`} className="flex items-center">
       <div className="flex items-center">
@@ -28,7 +27,6 @@ const NavigationBreadcrumb = ({ route }) => {
 
 const NavigationBreadcrumbs = () => {
   const matches = useMatches();
-  console.log(matches);
   const crumbs = matches.map(route => [
     <NavigationBreadcrumb route={route} />, 
     <li key={`nav-breadcrumb-${route.id}-spacer`}>{'→'}</li>

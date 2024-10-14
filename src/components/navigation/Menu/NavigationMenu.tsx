@@ -18,11 +18,10 @@ const NavigationMenuItem = ({ item }) => {
     <div>
       <NavLink
         to={item.path}
-        end
         className={({ isActive }) =>
           `mb-1 px-3 py-2 rounded-lg transition-colors block ${isActive
             ? 'bg-gray-300 dark:bg-gray-700'
-            : 'hover:bg-gray-300'
+            : 'hover:bg-gray-200 hover:dark:bg-gray-800'
           }`
         }
       >
@@ -41,7 +40,7 @@ const NavigationMenuItem = ({ item }) => {
 };
 
 
-export default function NavigationMenu({ items, level = 0 }: NavigationMenuProps) {
+export default function NavigationMenu({ items }: NavigationMenuProps) {
   return (
     <div className="w-64 h-screen bg-gray-100 dark:bg-gray-900 shadow-inner">
       <nav className="flex flex-col p-4">

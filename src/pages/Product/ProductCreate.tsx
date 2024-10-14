@@ -30,12 +30,12 @@ export const create = async (e: React.FormEvent<HTMLFormElement>) => {
   // by containing the inputs in numbered keys, but Typescript
   // doesn't quite match the reality of that object shape.
   const { id, name, description, amount, } = Array.from(e.target as unknown as Array<any>).reduce((product, input, index) => {
-    
+
     return {
       ...product,
       [input.name]: input.value
     }
-  }, { } as Partial<Product>);
+  }, {} as Partial<Product>);
 
   await productStore.set(id, {
     id, name, description, inventory: { amount }, price: { amount: '37.00', unit: 'USD', symbol: '$' }
@@ -51,10 +51,12 @@ export const ProductCreateModal = () => {
 
   return (
     <Modal id="product-create-modal">
-      <ProductForm.Card title="Create" product={{ id: crypto.randomUUID(), ...state }} onSubmit={(e) => create(e).then((id) => navigate(`../${id}`))}
-        headerEnd={<Link to="..">
+      <div className="min-w-96 size-4/5 overflow-auto mx-auto">
+        <ProductForm.Card title="Create" product={{ id: crypto.randomUUID(), ...state }} onSubmit={(e) => create(e).then((id) => navigate(`../${id}`))}
+          headerEnd={<Link to="..">
             Close
-        </Link>} />
+          </Link>} />
+      </div>
     </Modal>
   );
 }
@@ -63,7 +65,7 @@ export const ProductCreatePage = () => {
   const navigate = useNavigate();
 
   return <ProductForm.Card title="Create" product={{ id: crypto.randomUUID() }} onSubmit={(e) => create(e).then((id) => navigate(`../${id}`))} headerEnd={<Link to="..">
-      Close
+    Close
   </Link>} />
 }
 

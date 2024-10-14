@@ -39,34 +39,38 @@ const edit = async (e: FormEvent<HTMLFormElement>) => {
 
 const ProductEditCard = ({ product, headerEnd, onSubmit, loading = false }: PropsWithChildren<ProductFormCardProps>) => {
   return (
-  <ProductForm.Card product={product} title={`Edit ${product?.name}`} headerEnd={headerEnd} onSubmit={onSubmit} loading={loading}/>
-)};
+    <ProductForm.Card product={product} title={`Edit ${product?.name}`} headerEnd={headerEnd} onSubmit={onSubmit} loading={loading} />
+  )
+};
 
 const ProductEditModal = () => {
   const navigate = useNavigate();
   const { data, refresh } = useOutletContext() as { [_: string]: any };
   const { state } = useLocation();
   const [loading, setLoading] = useState(true);
-  
+
   useEffect(() => {
     data.result.then(() => setLoading(false))
   }, [])
 
   return (
-    <Modal id="modal-edit-product">
-      <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'>Close</Link>} loading={loading}/>} >
-      <Await resolve={data.result}>
-        {(product) =>
-          <ProductEditCard product={product} headerEnd={<Link to='..'>Close</Link>} onSubmit={(e) => {
-            setLoading(true);
-            edit(e)
-            .then((id) => refresh?.(id))
-            .then(() => navigate(`..`))
-            .catch((err) => console.error(err))
-            .finally(() => setLoading(false));
-          }}/>}
-      </Await>
-      </Suspense>
+    <Modal id="modal-edit-product" size={4}>
+
+      <div className="min-w-96 size-2/5 overflow-auto mx-auto">
+        <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'>Close</Link>} loading={loading} />} >
+          <Await resolve={data.result}>
+            {(product) =>
+              <ProductEditCard product={product} headerEnd={<Link to='..'>Close</Link>} onSubmit={(e) => {
+                setLoading(true);
+                edit(e)
+                  .then((id) => refresh?.(id))
+                  .then(() => navigate(`..`))
+                  .catch((err) => console.error(err))
+                  .finally(() => setLoading(false));
+              }} />}
+          </Await>
+        </Suspense>
+      </div>
     </Modal>
   );
 }

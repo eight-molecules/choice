@@ -6,7 +6,7 @@ function TableHead<T, U extends Id<T>>({ children, RowElement }: PropsWithChildr
   RowElement?: React.JSXElementConstructor<PropsWithChildren>
 }> & HTMLAttributes<HTMLTableSectionElement>) {
   if (RowElement !== undefined) {
-    return <thead className="sticky">
+    return <thead>
       <RowElement />
     </thead>
   }
@@ -16,9 +16,9 @@ function TableHead<T, U extends Id<T>>({ children, RowElement }: PropsWithChildr
   </thead>
 };
 
-const TableHeaderRow = ({ children, className }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
+const TableHeaderRow = ({ children, bg = "bg-gray-50 dark:bg-gray-900"  }: PropsWithChildren<{ bg?: string }> & HTMLAttributes<HTMLTableRowElement>) => {
   return (
-    <tr className={`bg-gray-50 dark:bg-gray-900 ${className}`} children={children} />
+    <tr className={bg} children={children} />
   )
 }
 
@@ -44,8 +44,8 @@ function TableBody<T, U extends Id<T>>({ children, data, RowElement }: PropsWith
 };
 
 
-const TableRow = ({ children, className = '' }: PropsWithChildren & HTMLAttributes<HTMLTableRowElement>) => {
-  return <tr className={`bg-gray-100 even:bg-gray-200 dark:bg-gray-950 even:dark:bg-gray-900 ${className}`}>
+const TableRow = ({ children, className = '', bg = 'bg-gray-100 even:bg-gray-200 dark:bg-gray-950 even:dark:bg-gray-900' }: PropsWithChildren<{ bg?: string }> & HTMLAttributes<HTMLTableRowElement>) => {
+  return <tr className={`${bg} ${className}`}>
     {children}
   </tr>
 }

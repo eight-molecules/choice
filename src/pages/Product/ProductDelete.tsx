@@ -16,9 +16,9 @@ const ProductDeleteCard = () => {
 
 const ProductDeleteModal = () => {
   const { state } = useLocation();
+
   return (
     <Modal id="delete-product-modal">
-
       <div className="min-w-96 size-2/5 overflow-auto mx-auto">
         <ProductDeleteCard />
       </div>

@@ -40,7 +40,7 @@ export const routes: RouteObject[] = [
           loader: ProductCreate.loader,
           
         }, {
-          path: "delete",
+          path: "delete/:_",
           element: <ProductDelete.Modal />,
         }]
       },

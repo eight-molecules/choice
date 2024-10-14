@@ -1,7 +1,7 @@
-import { Await, json, Link, useLocation, useNavigate, useOutletContext, useRevalidator } from "react-router-dom";
+import { Await, json, Link, useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import Modal from '../../components/Modal';
 import { store as productStore } from '../../storage/product';
-import { FormEvent, PropsWithChildren, ReactNode, Suspense, useEffect, useState } from "react";
+import { FormEvent, PropsWithChildren, Suspense, useEffect, useState } from "react";
 import ProductForm, { ProductFormCardProps } from "./ProductForm";
 import { parse } from "../../network/response";
 
@@ -51,10 +51,10 @@ const ProductEditModal = () => {
 
   useEffect(() => {
     data.result.then(() => setLoading(false))
-  }, [])
+  }, [data.result])
 
   return (
-    <Modal id="modal-edit-product" size={4}>
+    <Modal.Element id="modal-edit-product" size={4}>
 
       <div className="min-w-96 size-2/5 overflow-auto mx-auto">
         <Suspense fallback={<ProductEditCard product={{ ...state }} headerEnd={<Link to='..'>Close</Link>} loading={loading} />} >
@@ -71,7 +71,7 @@ const ProductEditModal = () => {
           </Await>
         </Suspense>
       </div>
-    </Modal>
+    </Modal.Element>
   );
 }
 

@@ -1,12 +1,11 @@
-import { json, redirect, RouteObject } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
-import PageLayout from "./components/Layout/PageLayout";
 import ProductList from "./pages/Product/ProductList";
 import ProductCreate from "./pages/Product/ProductCreate";
 import Product from "./pages/Product";
 import ProductEdit from "./pages/Product/ProductEdit";
 import ProductDetail from "./pages/Product/ProductDetail";
 import ProductDelete from "./pages/Product/ProductDelete";
+import { redirect, RouteObject } from "react-router-dom";
 
 export const routes: RouteObject[] = [
   {
@@ -16,6 +15,16 @@ export const routes: RouteObject[] = [
     path: 'dashboard',
     element: <Dashboard.Page />,
     loader: Dashboard.loader,
+    children: [{
+      path: 'create',
+      children: [{
+        path: '',
+        loader: async () => redirect('..'),
+      }, {
+        path: 'product',
+        element: <ProductCreate.Modal />
+      }]
+    }]
   }, {
     path: 'product',
     element: <Product.Page />,

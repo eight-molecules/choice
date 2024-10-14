@@ -1,4 +1,4 @@
-import { json, Link, Outlet, useLoaderData, useLocation, useNavigate } from "react-router-dom";
+import { json, Link, Outlet, useLoaderData, useLocation } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import { useEffect, useId, useState } from "react";
 import { parse } from "../../network/response";
@@ -19,21 +19,21 @@ export const loader = async ({ params }) => {
 const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const Page = () => {
   const id = useId();
-  const navigate = useNavigate();
-  const data = { result: {} } = useLoaderData() as { [_: string]: any };
+  const data = useLoaderData() as { [_: string]: any };
   const { state } = useLocation();
-  const [product, setProduct] = useState({ ...state });
+  const [product, setProduct] = useState(state?.product ?? { });
 
   useEffect(() => {
-    data.result.then((item) => setProduct({ ...state, ...item }));
-  }, [])
+    data.result.then((item) => setProduct({ ...(state?.product ?? { }), ...item }));
+  }, [data.result, state])
 
   const refresh = (id) => {
-    productStore.get(id).then((item) => setProduct({ ...state, ...item }));
+    productStore.get(id).then((item) => setProduct({ ...(state?.product ?? { }), ...item }));
   }
-  const flatten = (obj: { [_: string]: any }, level = 0, prefix = '') => Object.entries(obj).map(([k, v]) => {
+
+  const flatten = (obj: { [_: string]: any }, { prefix = '', level = 0 }) => Object.entries(obj).map(([k, v]) => {
     if (typeof v === 'object') {
-      return [{ k }, ...flatten(v, level + 1, prefix)];
+      return [{ k }, ...flatten(v, { prefix: `${prefix}:${k}`, level: level + 1 })];
     }
 
     return {
@@ -50,15 +50,15 @@ const Page = () => {
       <Overflowable x y>
       <Table>
         <Table.Head>
-          <Table.Head.Row bg='bg-gray-800'>
+          <Table.Head.Row bg='bg-gray-50 dark:bg-gray-950'>
             <Table.Cell className="text-right">Field</Table.Cell>
             <Table.Cell>Value</Table.Cell>
             <Table.Cell width="100%"></Table.Cell>
           </Table.Head.Row>
         </Table.Head>
-        <Table.Body data={flatten(product)}
+        <Table.Body data={flatten(product, { prefix: id })}
           RowElement={({ datum: { k, v, level, id } }: { datum: { k: string, v: string, level: number } & Id<string> }) =>
-            <Table.Row bg={typeof v === 'undefined' ? 'bg-gray-800' : undefined} >
+            <Table.Row bg={typeof v === 'undefined' ? 'bg-gray-200 dark:bg-gray-800' : undefined} >
               <Table.Cell className="text-right">
                 <label htmlFor={id} className={`pl-${level * 4}`}>{capitalize(k)}</label>
               </Table.Cell>

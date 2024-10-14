@@ -22,7 +22,7 @@ export const store = (() => {
     ids: async () => json([...await storage.getItem(`Ids`)]),
     set: async (k, v: Product) => {
       if (!await storage.getItem(k)) {
-        const list = [] = await storage.getItem(`Ids`)
+        const list = [ ...await storage.getItem(`Ids`) ]
         storage.setItem(`Ids`, [...list, k])
       }
 

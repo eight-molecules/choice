@@ -1,5 +1,5 @@
 import { FormEvent, FormEventHandler, PropsWithChildren, Suspense, useEffect, useState } from "react";
-import { Await, json, Link, Outlet, useLoaderData } from "react-router-dom";
+import { Await, json, Link, Outlet, useLoaderData, useNavigate } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import Table from "../../components/shared/Table/Table";
 import { Product } from "../../types/Product";
@@ -23,7 +23,7 @@ const ProductRow = ({ datum, onChange, selected }: PropsWithChildren<{ datum: Pr
   return (
     <Table.Row key={`inventory-list-row-${datum.id}`}>
       <Table.Cell width="1"><input type="checkbox" name={`${datum.id}`} onChange={onChange} checked={selected}/></Table.Cell>
-      <Table.Cell><Link to={`/product/detail/${datum.id}`} state={datum}>{datum?.name}</Link></Table.Cell>
+      <Table.Cell><Link to={`/product/detail/${datum.id}`} state={{ product: datum }}>{datum?.name}</Link></Table.Cell>
       <Table.Cell>{datum.price?.symbol ?? datum.price?.unit}{datum.price?.amount}</Table.Cell>
       <Table.Cell>{datum.inventory?.amount}</Table.Cell>
       <Table.Cell>{datum.description}</Table.Cell>
@@ -55,10 +55,13 @@ const ProductListCard = ({ data, title,  }: PropsWithChildren<{
         {title}
       </div>
       <div className="space-x-3">
-        <Link to="./delete" state={Object.entries(selection).map(([k, v]) => v && data?.find((product) => product.id === k))}>
+        {selectedCount > 0 && (
+          <Link to="./delete" state={Object.entries(selection).map(([k, v]) => v ? data?.find((product) => product.id === k)?.id : undefined ).filter((v) => v)} >
           Delete
         </Link>
-        <Link to="./create">
+        )}
+
+        <Link to="./create/product">
             Create
         </Link>
       </div>
@@ -68,7 +71,7 @@ const ProductListCard = ({ data, title,  }: PropsWithChildren<{
     <Table.Head className="drop-shadow-sm" RowElement={() =><Table.Head.Row>
         <Table.Cell width="1"><input type="checkbox" name="select-all" onChange={(e) => {
           setSelection(Object.keys(selection).reduce((acc, cur) => ({ ...acc, [cur]: e.target.checked }), { }))
-        }} checked={selectedCount === data?.length} /></Table.Cell>
+        }} checked={selectedCount === data?.length && selectedCount > 0} /></Table.Cell>
         <Table.Cell>Name</Table.Cell>
         <Table.Cell>Price</Table.Cell>
         <Table.Cell>Inventory</Table.Cell>

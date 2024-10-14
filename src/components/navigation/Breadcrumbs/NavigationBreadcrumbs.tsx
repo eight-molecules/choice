@@ -1,5 +1,4 @@
 import { Await, NavLink, useMatches, useRouteLoaderData } from 'react-router-dom';
-import { parse } from '../../../network/response';
 import { Suspense } from 'react';
 
 const NavigationBreadcrumb = ({ route }) => {

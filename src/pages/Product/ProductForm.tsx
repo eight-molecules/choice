@@ -1,4 +1,4 @@
-import { Form, useNavigate } from "react-router-dom";
+import { Form } from "react-router-dom";
 import Card from "../../components/shared/Card/Card";
 import { FormEvent, PropsWithChildren, ReactNode } from "react";
 import { Product } from "../../types/Product";
@@ -30,10 +30,8 @@ export const ProductFormCard = ({
   product,
   headerEnd,
   submitBtn = <button name="submit" type="submit">Submit</button>,
-  title,
+  title
 }: PropsWithChildren<ProductFormCardProps>) => {
-  const navigate = useNavigate();
-
   return (
     <Card>
       <div className="relative">
@@ -50,10 +48,6 @@ export const ProductFormCard = ({
             <div className="grow p-3 min-w-80 w-full">
               <label htmlFor="name">Name: </label>
               <input name="name" defaultValue={product?.name ?? ''} placeholder={"Product Name"} type="string" required />
-            </div>
-            <div className="grow p-3 min-w-80 w-full">
-              <label htmlFor="amount">Inventory: </label>
-              <input name="amount" defaultValue={product?.inventory?.amount ?? 0} type="number" />
             </div>
             <div className="grow p-3 min-w-80 w-full">
               <label htmlFor="description">Description: </label>

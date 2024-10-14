@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Await, json, useLoaderData } from "react-router-dom";
+import { Await, json, Outlet, useLoaderData } from "react-router-dom";
 import ThreeColumnLayout from "../components/Layout/ThreeColumnLayout";
 import Card from "../components/shared/Card/Card";
 import NavigationMenu from "../components/navigation/Menu/NavigationMenu";
@@ -44,6 +44,7 @@ const Page = () => {
             </Suspense>
           </div>
         </div>
+        <Outlet />
       </ThreeColumnLayout>
     </PageLayout>
   );

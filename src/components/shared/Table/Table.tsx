@@ -70,6 +70,7 @@ const Table = ({ children, className = '' }: PropsWithChildren<{ className?: str
 }
 
 TableHead.Row = TableHeaderRow;
+TableHead.Cell = TableHeaderCell;
 TableBody.Row = TableRow;
 
 Table.Head = TableHead; 
